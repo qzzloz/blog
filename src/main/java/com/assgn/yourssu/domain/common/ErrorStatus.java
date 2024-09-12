@@ -1,5 +1,6 @@
 package com.assgn.yourssu.domain.common;
 
+import com.assgn.yourssu.dto.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorStatus implements BaseErrorCode{
 
     USER_NOT_EXIST(HttpStatus.BAD_REQUEST, "USER4001", "유저가 없습니다."),
+    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER4001", "이미 존재하는 이메일입니다."),
     ;
 
     private final HttpStatus httpStatus;
@@ -16,8 +18,28 @@ public enum ErrorStatus implements BaseErrorCode{
     private final String message;
 
 
+//    @Override
+//    public ApiResponse<Void> getErrorResponse() {
+//        return ApiResponse.onFailure(code, message);
+//    }
+
     @Override
-    public ApiResponse<Void> getErrorResponse() {
-        return ApiResponse.onFailure(code, message);
+    public ErrorReasonDTO getReason() {
+        return ErrorReasonDTO.builder()
+                .message(message)
+                .code(code)
+                .isSuccess(false)
+                .build();
+    }
+
+    @Override
+    public ErrorReasonDTO getReasonHttpStatus() {
+        return ErrorReasonDTO.builder()
+                .message(message)
+                .code(code)
+                .isSuccess(false)
+                .httpStatus(httpStatus)
+                .build()
+                ;
     }
 }

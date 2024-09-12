@@ -1,6 +1,8 @@
 package com.assgn.yourssu.domain;
 import com.assgn.yourssu.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
@@ -14,12 +16,19 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false, length = 255)
     private String email;
 
+    @NotNull
     @Column(nullable = false, length = 255)
     private String password;
 
+    @NotNull
     @Column(nullable = false, length = 255)
     private String username;
+
+    public User(String email, String username, String encode) {
+        super();
+    }
 }

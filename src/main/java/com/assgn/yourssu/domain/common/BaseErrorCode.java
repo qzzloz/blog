@@ -1,14 +1,10 @@
 package com.assgn.yourssu.domain.common;
 
-import org.springframework.http.HttpStatus;
+import com.assgn.yourssu.dto.ErrorReasonDTO;
 
 public interface BaseErrorCode {
 
-    HttpStatus getHttpStatus();
+    public ErrorReasonDTO getReason();
 
-    String getCode();
-
-    String getMessage();
-
-    ApiResponse<Void> getErrorResponse();
+    public ErrorReasonDTO getReasonHttpStatus();
 }

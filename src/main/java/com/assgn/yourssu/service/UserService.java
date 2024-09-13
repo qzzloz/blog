@@ -29,7 +29,6 @@ public class UserService {
         // 방법 2
 //        User user = request.toEntity(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getUsername());
 
-        // 방법 3
         User user = userRepository.save(User.builder()
                         .email(request.getEmail())
                         .username(request.getUsername())

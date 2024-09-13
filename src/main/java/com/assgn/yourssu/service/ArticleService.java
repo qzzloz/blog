@@ -18,12 +18,11 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     public ArticleResponseDTO createArticle(ArticleRequestDTO.CreateArticleDTO request) {
 
-        User writer = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
+        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
         Article newArticle = Article.builder()
                 .title(request.getTitle())
@@ -55,9 +54,7 @@ public class ArticleService {
     public ArticleResponseDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
-        // TODO: request의 이메일, 비밀번호 쌍이 맞는지 검사 (로그인)
-        User writer = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
+        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
         if(Objects.equals(writer.getId(), article.getUser().getId())) {
             article.update(request.getTitle(), request.getContent());
@@ -76,9 +73,7 @@ public class ArticleService {
     public void deleteArticle(Long articleId, ArticleRequestDTO.DeleteArticleDTO request) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
-        // TODO: request의 이메일, 비밀번호 쌍이 맞는지 검사 (로그인)
-        User writer = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
+        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
         if(Objects.equals(writer.getId(), article.getUser().getId())) {
             articleRepository.delete(article);
@@ -86,4 +81,5 @@ public class ArticleService {
             throw new ArticleException(ErrorStatus.NOT_VALID_USER);
         }
     }
+
 }

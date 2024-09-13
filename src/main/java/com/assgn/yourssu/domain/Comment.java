@@ -24,4 +24,8 @@ public class Comment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)//지연 로딩
     @JoinColumn(name = "article_id")
     private Article article;
+
+    public void update(String content){
+        this.content = content;
+    }
 }

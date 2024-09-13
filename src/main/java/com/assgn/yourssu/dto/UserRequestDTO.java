@@ -8,14 +8,11 @@ public class UserRequestDTO {
 
     @Getter
     public static class JoinDTO{
-        @NotBlank(message = "null 또는 공백이 입력되었습니다.")
+        @NotBlank
         String email;
-
         @NotNull
         String password;
-
         @NotNull
         String username;
-
     }
 }

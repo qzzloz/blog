@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleResponseDTO {
-    private Long id;
+    private Long articleId;
     private String email;
     private String title;
     private String content;

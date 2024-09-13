@@ -7,31 +7,33 @@ public class ArticleRequestDTO {
 
     @Getter
     public static class CreateArticleDTO {
+        @NotBlank
         private String email;
+        @NotBlank
         private String password;
-
         @NotBlank
         private String title;
-
         @NotBlank
         private String content;
     }
 
     @Getter
     public static class UpdateArticleDTO {
+        @NotBlank
         private String email;
+        @NotBlank
         private String password;
-
-        @NotBlank(message = "null 또는 공백이 입력되었습니다.")
+        @NotBlank
         private String title;
-
-        @NotBlank(message = "null 또는 공백이 입력되었습니다.")
+        @NotBlank
         private String content;
     }
 
     @Getter
     public static class DeleteArticleDTO {
+        @NotBlank
         private String email;
+        @NotBlank
         private String password;
     }
 }

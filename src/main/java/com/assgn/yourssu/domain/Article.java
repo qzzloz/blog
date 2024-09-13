@@ -26,7 +26,7 @@ public class Article extends BaseEntity {
     @Column(nullable = false, length = 255)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)//지연 로딩   => 여기 왜 지연로딩으로 했는지??
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

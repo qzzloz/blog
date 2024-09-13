@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)  // 액세스레벨 왜 이렇게 함?
-@AllArgsConstructor(access = AccessLevel.PRIVATE)   // 얘도
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Entity
 public class User extends BaseEntity {
@@ -28,8 +27,4 @@ public class User extends BaseEntity {
     @NotNull
     @Column(nullable = false, length = 255)
     private String username;
-
-    public User(String email, String username, String encode) {
-        super();
-    }
 }

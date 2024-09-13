@@ -29,18 +29,12 @@ public class ApiResponse<T> {
     @JsonProperty("content")
     private T content;
 
-    // 성공한 경우 응답 생성
     public static <T> ApiResponse<T> onSuccess(T content) {
         return new ApiResponse<>(HttpStatus.OK.name(), HttpStatus.OK.getReasonPhrase(), content);
     }
 
     public static <T> ApiResponse<T> of(String message,T result){
         return new ApiResponse<>(HttpStatus.OK.name(), message, result);
-    }
-
-    // 실패한 경우 응답 생성
-    public static <T> ApiResponse<T> onFailure(String statusCode, String message) {
-        return new ApiResponse<>(statusCode, message, null);
     }
 
     public static <T> ApiResponse<T> onFailure(String statusCode, String message, T content) {

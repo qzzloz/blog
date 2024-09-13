@@ -36,7 +36,7 @@ public class ArticleService {
         Article savedArticle = articleRepository.save(newArticle);
 
         return ArticleResponseDTO.builder()
-                .id(savedArticle.getId())
+                .articleId(savedArticle.getId())
                 .title(savedArticle.getTitle())
                 .content(savedArticle.getContent())
                 .email(savedArticle.getUser().getEmail())
@@ -55,7 +55,7 @@ public class ArticleService {
                 .collect(Collectors.toList());
 
         return ArticleResponseDTO.builder()
-                .id(article.getId())
+                .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .email(article.getUser().getEmail())
@@ -75,7 +75,7 @@ public class ArticleService {
         }
 
         return ArticleResponseDTO.builder()
-                .id(article.getId())
+                .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .email(article.getUser().getEmail())

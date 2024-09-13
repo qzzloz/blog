@@ -33,11 +33,6 @@ public enum ErrorStatus implements BaseErrorCode{
     private final String message;
 
 
-//    @Override
-//    public ApiResponse<Void> getErrorResponse() {
-//        return ApiResponse.onFailure(code, message);
-//    }
-
     @Override
     public ErrorReasonDTO getReason() {
         return ErrorReasonDTO.builder()

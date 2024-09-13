@@ -13,10 +13,7 @@ public class UserResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class JoinResponseDTO{
-        @NotNull
         String email;
-
-        @NotNull
         String username;
     }
 }

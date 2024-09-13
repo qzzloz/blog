@@ -25,7 +25,6 @@ public class UserService {
                 }
         );
 
-
         // 방법 2
 //        User user = request.toEntity(request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getUsername());
 
@@ -34,7 +33,6 @@ public class UserService {
                         .username(request.getUsername())
                         .password(passwordEncoder.encode(request.getPassword()))
                         .build());
-
 
         return UserResponseDTO.JoinResponseDTO.builder()
                 .email(user.getEmail())

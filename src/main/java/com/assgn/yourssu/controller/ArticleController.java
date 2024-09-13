@@ -16,7 +16,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "새 글 작성", description = "새로운 글을 작성합니다.")
     public ApiResponse<ArticleResponseDTO> createArticle(@RequestBody @Valid ArticleRequestDTO.CreateArticleDTO request) {
         ArticleResponseDTO response = articleService.createArticle(request);

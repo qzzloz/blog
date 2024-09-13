@@ -10,10 +10,10 @@ public class ArticleRequestDTO {
         private String email;
         private String password;
 
-        @NotBlank(message = "null 또는 공백이 입력되었습니다.")
+        @NotBlank
         private String title;
 
-        @NotBlank(message = "null 또는 공백이 입력되었습니다.")
+        @NotBlank
         private String content;
     }
 

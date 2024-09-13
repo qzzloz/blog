@@ -41,7 +41,18 @@ public class UserService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .build();
+    }
 
+    // TODO: 단순 검사말고 로그인 기능으로 바꾸기
+    public User checkEmailPwd(String email, String password){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
+
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new UserException(ErrorStatus.NOT_VALID_PASSWORD);
+        }
+
+        return user;
     }
 
 

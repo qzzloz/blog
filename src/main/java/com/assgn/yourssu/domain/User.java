@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 액세스레벨 왜 이렇게 함?

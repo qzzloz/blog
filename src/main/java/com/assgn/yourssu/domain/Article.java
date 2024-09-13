@@ -4,6 +4,8 @@ import com.assgn.yourssu.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,5 +32,11 @@ public class Article extends BaseEntity {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.setUpdatedAt(LocalDateTime.now());
+    }
 
 }

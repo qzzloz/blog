@@ -6,6 +6,7 @@ import com.assgn.yourssu.dto.CommentResponseDTO;
 import com.assgn.yourssu.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,25 +18,25 @@ public class CommentController {
 
     @PostMapping("/{article_id}")
     @Operation(summary = "새 댓글 작성", description = "새로운 댓글을 작성합니다.")
-    public ApiResponse<CommentResponseDTO> createComment(@PathVariable("article_id") Long articleId,
-                                                      @RequestBody CommentRequestDTO.CreateCommentDTO request) {
+    public ResponseEntity<CommentResponseDTO> createComment(@PathVariable("article_id") Long articleId,
+                                                            @RequestBody CommentRequestDTO.CreateCommentDTO request) {
         CommentResponseDTO response = commentService.createComment(articleId, request);
-        return ApiResponse.of("댓글 업로드 성공", response);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{comment_id}")
     @Operation(summary = "댓글 조회", description = "댓글을 조회합니다.")
-    public ApiResponse<CommentResponseDTO> getComment(@PathVariable("comment_id") Long commentId) {
+    public ResponseEntity<CommentResponseDTO> getComment(@PathVariable("comment_id") Long commentId) {
         CommentResponseDTO response = commentService.getComment(commentId);
-        return ApiResponse.of("댓글 조회", response);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{comment_id}")
     @Operation(summary = "댓글 수정", description = "자신이 작성한 댓글만 수정할 수 있습니다.")
-    public ApiResponse<CommentResponseDTO> updateComment(@PathVariable("comment_id") Long commentId,
+    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable("comment_id") Long commentId,
                                                          @RequestBody CommentRequestDTO.UpdateCommentDTO request){
         CommentResponseDTO response = commentService.updateComment(commentId, request);
-        return ApiResponse.of("댓글 수정 완료", response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{comment_id}")

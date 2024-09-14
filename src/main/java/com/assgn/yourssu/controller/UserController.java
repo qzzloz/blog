@@ -7,6 +7,7 @@ import com.assgn.yourssu.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,9 @@ public class UserController {
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "회원가입")
-    public ApiResponse<UserResponseDTO.JoinResponseDTO> join(@RequestBody @Valid UserRequestDTO.JoinDTO request) {
+    public ResponseEntity<UserResponseDTO.JoinResponseDTO> join(@RequestBody @Valid UserRequestDTO.JoinDTO request) {
         UserResponseDTO.JoinResponseDTO response = userService.join(request);
-        return ApiResponse.of("회원가입 성공", response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/withdraw")

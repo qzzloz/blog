@@ -28,7 +28,7 @@ public class UserController {
     @DeleteMapping("/withdraw")
     @Operation(summary = "회원 탈퇴", description = "해당 회원이 작성한 게시글, 댓글이 모두 삭제됩니다.")
     public ApiResponse<Void> withdraw(@RequestBody @Valid UserRequestDTO.withdrawDTO request) {
-        userService.withdraw(request);
+        userService.deleteUser(request);
         return ApiResponse.onSuccess(null);
     }
 }

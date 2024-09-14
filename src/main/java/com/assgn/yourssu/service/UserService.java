@@ -53,4 +53,8 @@ public class UserService {
     }
 
 
+    public void withdraw(UserRequestDTO.withdrawDTO request) {
+        User user = checkEmailPwd(request.getEmail(), request.getPassword());
+        userRepository.delete(user);
+    }
 }

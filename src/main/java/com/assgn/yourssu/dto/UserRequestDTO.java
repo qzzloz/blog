@@ -15,4 +15,12 @@ public class UserRequestDTO {
         @NotNull
         String username;
     }
+
+    @Getter
+    public static class withdrawDTO{
+        @NotBlank
+        String email;
+        @NotBlank
+        String password;
+    }
 }

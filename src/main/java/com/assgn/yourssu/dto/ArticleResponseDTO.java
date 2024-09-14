@@ -8,14 +8,30 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Builder
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class ArticleResponseDTO {
-    private Long articleId;
-    private String email;
-    private String title;
-    private String content;
-    private List<CommentResponseDTO> commentList;
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ArticleDTO {
+        private Long articleId;
+        private String email;
+        private String title;
+        private String content;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetArticleDTO {
+        private Long articleId;
+        private String email;
+        private String title;
+        private String content;
+        private List<CommentResponseDTO> commentList;
+    }
+
 }

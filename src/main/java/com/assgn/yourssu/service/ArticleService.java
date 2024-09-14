@@ -23,7 +23,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
-    public ArticleResponseDTO createArticle(ArticleRequestDTO.CreateArticleDTO request) {
+    public ArticleResponseDTO.ArticleDTO createArticle(ArticleRequestDTO.CreateArticleDTO request) {
 
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
@@ -35,7 +35,7 @@ public class ArticleService {
 
         Article savedArticle = articleRepository.save(newArticle);
 
-        return ArticleResponseDTO.builder()
+        return ArticleResponseDTO.ArticleDTO.builder()
                 .articleId(savedArticle.getId())
                 .title(savedArticle.getTitle())
                 .content(savedArticle.getContent())
@@ -43,7 +43,7 @@ public class ArticleService {
                 .build();
     }
 
-    public ArticleResponseDTO getArticle(Long articleId) {
+    public ArticleResponseDTO.GetArticleDTO getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
         List<CommentResponseDTO> commentList = article.getCommentList().stream()
@@ -54,7 +54,7 @@ public class ArticleService {
                         .build())
                 .collect(Collectors.toList());
 
-        return ArticleResponseDTO.builder()
+        return ArticleResponseDTO.GetArticleDTO.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
@@ -63,7 +63,7 @@ public class ArticleService {
                 .build();
     }
 
-    public ArticleResponseDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request) {
+    public ArticleResponseDTO.ArticleDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request) {
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
@@ -74,7 +74,7 @@ public class ArticleService {
             throw new ArticleException(ErrorStatus.NOT_VALID_USER);
         }
 
-        return ArticleResponseDTO.builder()
+        return ArticleResponseDTO.ArticleDTO.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())

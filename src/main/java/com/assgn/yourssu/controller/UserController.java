@@ -4,11 +4,13 @@ import com.assgn.yourssu.domain.common.ApiResponse;
 import com.assgn.yourssu.dto.TokenDTO;
 import com.assgn.yourssu.dto.UserRequestDTO;
 import com.assgn.yourssu.dto.UserResponseDTO;
+import com.assgn.yourssu.security.CustomUserDetails;
 import com.assgn.yourssu.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,8 +31,8 @@ public class UserController {
 
     @DeleteMapping("/withdraw")
     @Operation(summary = "회원 탈퇴", description = "해당 회원이 작성한 게시글, 댓글이 모두 삭제됩니다.")
-    public ApiResponse<Void> withdraw(@RequestBody @Valid UserRequestDTO.WithdrawDTO request) {
-        userService.deleteUser(request);
+    public ApiResponse<Void> withdraw(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        userService.deleteUser(customUserDetails);
         return ApiResponse.onSuccess(null);
     }
 

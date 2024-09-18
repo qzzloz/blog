@@ -37,16 +37,17 @@ public class ArticleController {
     @PutMapping(value = "/{article_id}")
     @Operation(summary = "게시글 수정", description = "게시글을 수정합니다. 자신의 게시글만 수정할 수 있습니다.")
     public ResponseEntity<ArticleResponseDTO.ArticleDTO> updateArticle(@PathVariable Long article_id,
-                                                         @RequestBody @Valid ArticleRequestDTO.UpdateArticleDTO request) {
-        ArticleResponseDTO.ArticleDTO response = articleService.updateArticle(article_id, request);
+                                                                       @RequestBody @Valid ArticleRequestDTO.UpdateArticleDTO request,
+                                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ArticleResponseDTO.ArticleDTO response = articleService.updateArticle(article_id, request, userDetails);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(value = "/{article_id}")
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다. 자신의 게시글만 삭제할 수 있습니다.")
     public ApiResponse<Void> deleteArticle(@PathVariable Long article_id,
-                                           @RequestBody @Valid ArticleRequestDTO.DeleteArticleDTO request) {
-        articleService.deleteArticle(article_id, request);
+                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+        articleService.deleteArticle(article_id, userDetails);
         return ApiResponse.onSuccess(null);
     }
 

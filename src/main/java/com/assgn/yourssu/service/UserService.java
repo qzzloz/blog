@@ -7,6 +7,7 @@ import com.assgn.yourssu.domain.User;
 import com.assgn.yourssu.exception.UserException;
 import com.assgn.yourssu.repository.UserRepository;
 import com.assgn.yourssu.jwt.JwtTokenProvider;
+import com.assgn.yourssu.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,22 +47,9 @@ public class UserService {
                 .build();
     }
 
-    // TODO: 단순 검사말고 로그인 기능으로 바꾸기
-    public User checkEmailPwd(String email, String password){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
-
-        if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new UserException(ErrorStatus.NOT_VALID_PASSWORD);
-        }
-
-        return user;
-    }
-
-
     @Transactional
-    public void deleteUser(UserRequestDTO.WithdrawDTO request) {
-        User user = checkEmailPwd(request.getEmail(), request.getPassword());
+    public void deleteUser(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
         userRepository.delete(user);
     }
 

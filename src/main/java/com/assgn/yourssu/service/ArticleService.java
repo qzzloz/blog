@@ -69,8 +69,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public ArticleResponseDTO.ArticleDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request) {
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+    public ArticleResponseDTO.ArticleDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request, CustomUserDetails customUserDetails) {
+        User writer = customUserDetails.getUser();
 
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
@@ -89,10 +89,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticle(Long articleId, ArticleRequestDTO.DeleteArticleDTO request) {
+    public void deleteArticle(Long articleId, CustomUserDetails customUserDetails) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+        User writer = customUserDetails.getUser();
 
         if(Objects.equals(writer.getId(), article.getUser().getId())) {
             articleRepository.delete(article);

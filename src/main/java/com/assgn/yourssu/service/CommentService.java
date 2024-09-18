@@ -12,6 +12,7 @@ import com.assgn.yourssu.repository.ArticleRepository;
 import com.assgn.yourssu.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -22,6 +23,7 @@ public class CommentService {
     private final UserService userService;
     private final CommentRepository commentRepository;
 
+    @Transactional
     public CommentResponseDTO createComment(Long articleId, CommentRequestDTO.CreateCommentDTO request) {
 
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
@@ -44,6 +46,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public CommentResponseDTO getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorStatus.COMMENT_NOT_EXIST));
 
@@ -54,6 +57,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public CommentResponseDTO updateComment(Long commentId, CommentRequestDTO.UpdateCommentDTO request) {
 
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
@@ -73,6 +77,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public void deleteComment(Long commentId, CommentRequestDTO.DeleteCommentDTO request) {
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 

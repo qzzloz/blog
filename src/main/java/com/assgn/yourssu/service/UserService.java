@@ -1,14 +1,21 @@
 package com.assgn.yourssu.service;
 
 import com.assgn.yourssu.domain.common.ErrorStatus;
+import com.assgn.yourssu.dto.TokenDTO;
 import com.assgn.yourssu.dto.UserRequestDTO;
 import com.assgn.yourssu.dto.UserResponseDTO;
 import com.assgn.yourssu.domain.User;
 import com.assgn.yourssu.exception.UserException;
 import com.assgn.yourssu.repository.UserRepository;
+import com.assgn.yourssu.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +23,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     public UserResponseDTO.JoinResponseDTO join(UserRequestDTO.JoinDTO request){
         // 이미 가입한 회원인지 검사
         userRepository.findByEmail(request.getEmail()).ifPresent(
@@ -53,8 +63,18 @@ public class UserService {
     }
 
 
-    public void deleteUser(UserRequestDTO.withdrawDTO request) {
+    @Transactional
+    public void deleteUser(UserRequestDTO.WithdrawDTO request) {
         User user = checkEmailPwd(request.getEmail(), request.getPassword());
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public TokenDTO signIn(UserRequestDTO.SigninDTO request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+        return jwtTokenProvider.createToken(authentication);
+
     }
 }

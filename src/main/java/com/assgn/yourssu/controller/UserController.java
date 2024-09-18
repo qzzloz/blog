@@ -1,6 +1,7 @@
 package com.assgn.yourssu.controller;
 
 import com.assgn.yourssu.domain.common.ApiResponse;
+import com.assgn.yourssu.dto.TokenDTO;
 import com.assgn.yourssu.dto.UserRequestDTO;
 import com.assgn.yourssu.dto.UserResponseDTO;
 import com.assgn.yourssu.service.UserService;
@@ -28,8 +29,15 @@ public class UserController {
 
     @DeleteMapping("/withdraw")
     @Operation(summary = "회원 탈퇴", description = "해당 회원이 작성한 게시글, 댓글이 모두 삭제됩니다.")
-    public ApiResponse<Void> withdraw(@RequestBody @Valid UserRequestDTO.withdrawDTO request) {
+    public ApiResponse<Void> withdraw(@RequestBody @Valid UserRequestDTO.WithdrawDTO request) {
         userService.deleteUser(request);
         return ApiResponse.onSuccess(null);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<TokenDTO> signIn(@RequestBody @Valid UserRequestDTO.SigninDTO request){
+        TokenDTO token = userService.signIn(request);
+        return ResponseEntity.ok(token);
+
     }
 }

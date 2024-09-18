@@ -3,11 +3,13 @@ package com.assgn.yourssu.controller;
 import com.assgn.yourssu.domain.common.ApiResponse;
 import com.assgn.yourssu.dto.ArticleRequestDTO;
 import com.assgn.yourssu.dto.ArticleResponseDTO;
+import com.assgn.yourssu.security.CustomUserDetails;
 import com.assgn.yourssu.service.ArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,16 +21,17 @@ public class ArticleController {
 
     @PostMapping("")
     @Operation(summary = "새 글 작성", description = "새로운 글을 작성합니다.")
-    public ResponseEntity<ArticleResponseDTO.ArticleDTO> createArticle(@RequestBody @Valid ArticleRequestDTO.CreateArticleDTO request) {
-        ArticleResponseDTO.ArticleDTO response = articleService.createArticle(request);
+    public ResponseEntity<ArticleResponseDTO.ArticleDTO> createArticle(@RequestBody @Valid ArticleRequestDTO.CreateArticleDTO request,
+                                                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        ArticleResponseDTO.ArticleDTO response = articleService.createArticle(request, userDetails);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{article_id}")
     @Operation(summary = "게시글 조회", description = "게시글을 조회합니다.")
-    public ResponseEntity<ArticleResponseDTO.GetArticleDTO> getArticle(@PathVariable Long article_id) {
+    public ApiResponse<ArticleResponseDTO.GetArticleDTO> getArticle(@PathVariable Long article_id) {
         ArticleResponseDTO.GetArticleDTO response = articleService.getArticle(article_id);
-        return ResponseEntity.ok(response);
+        return ApiResponse.of("dma", response);
     }
 
     @PutMapping(value = "/{article_id}")

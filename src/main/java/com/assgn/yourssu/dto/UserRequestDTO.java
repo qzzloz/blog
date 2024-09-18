@@ -17,7 +17,15 @@ public class UserRequestDTO {
     }
 
     @Getter
-    public static class withdrawDTO{
+    public static class WithdrawDTO{
+        @NotBlank
+        String email;
+        @NotBlank
+        String password;
+    }
+
+    @Getter
+    public static class SigninDTO{
         @NotBlank
         String email;
         @NotBlank

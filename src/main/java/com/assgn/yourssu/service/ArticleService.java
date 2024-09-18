@@ -10,8 +10,11 @@ import com.assgn.yourssu.exception.ArticleException;
 import com.assgn.yourssu.exception.UserException;
 import com.assgn.yourssu.repository.ArticleRepository;
 import com.assgn.yourssu.repository.UserRepository;
+import com.assgn.yourssu.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,9 +26,10 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
-    public ArticleResponseDTO.ArticleDTO createArticle(ArticleRequestDTO.CreateArticleDTO request) {
-
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+    @Transactional
+    public ArticleResponseDTO.ArticleDTO createArticle(ArticleRequestDTO.CreateArticleDTO request,
+                                                       CustomUserDetails customUserDetails) {
+        User writer = customUserDetails.getUser();
 
         Article newArticle = Article.builder()
                 .title(request.getTitle())
@@ -43,6 +47,7 @@ public class ArticleService {
                 .build();
     }
 
+    @Transactional
     public ArticleResponseDTO.GetArticleDTO getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 
@@ -63,6 +68,7 @@ public class ArticleService {
                 .build();
     }
 
+    @Transactional
     public ArticleResponseDTO.ArticleDTO updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO request) {
         User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
 
@@ -82,6 +88,7 @@ public class ArticleService {
                 .build();
     }
 
+    @Transactional
     public void deleteArticle(Long articleId, ArticleRequestDTO.DeleteArticleDTO request) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
 

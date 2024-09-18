@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
@@ -74,7 +76,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 액세스 토큰 체크 & 인증 처리 메소드
+     * 액세스 토큰 체크 & 인증 처리 메서드
      * request에서 extractAccessToken()으로 액세스 토큰 추출 후, isTokenValid()로 유효한 토큰인지 검증
      * 유효한 토큰이면, 액세스 토큰에서 extractEmail로 Email을 추출한 후 findByEmail()로 해당 이메일을 사용하는 유저 객체 반환
      * 그 유저 객체를 saveAuthentication()으로 인증 처리하여
@@ -82,46 +84,54 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * 그 후 다음 인증 필터로 진행
      */
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        Optional<String> accessTokenOpt = jwtTokenProvider.extractAccessToken(request);
-        if (accessTokenOpt.isPresent()) {
-            String accessToken = accessTokenOpt.get();
-            if (jwtTokenProvider.isTokenValid(accessToken)) {
-                Optional<String> emailOpt = jwtTokenProvider.extractEmail(accessToken);
-                if (emailOpt.isPresent()) {
-                    String email = emailOpt.get();
-                    Optional<User> userOpt = userRepository.findByEmail(email);
-                    if (userOpt.isPresent()) {
-                        User user = userOpt.get();
-                        saveAuthentication(user);
-
-                        // 인증 정보 설정
-                        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                        // 로그로 확인
-                        System.out.println("User authenticated successfully: " + user.getEmail());
-                    } else {
-                        // 로그로 확인
-                        System.out.println("User not found for email: " + email);
-                    }
-                } else {
-                    // 로그로 확인
-                    System.out.println("Email extraction failed from token");
-                }
-            } else {
-                // 로그로 확인
-                System.out.println("Invalid access token");
+        try {
+            Optional<String> accessTokenOpt = jwtTokenProvider.extractAccessToken(request);
+            if (accessTokenOpt.isEmpty()) {
+                log.warn("Access token not present");
+                filterChain.doFilter(request, response);
+                return;
             }
-        } else {
-            // 로그로 확인
-            System.out.println("Access token not present");
+
+            String accessToken = accessTokenOpt.get();
+            if (!jwtTokenProvider.isTokenValid(accessToken)) {
+                log.warn("Invalid access token");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Optional<String> emailOpt = jwtTokenProvider.extractEmail(accessToken);
+            if (emailOpt.isEmpty()) {
+                log.warn("Email extraction failed from token");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String email = emailOpt.get();
+            Optional<User> userOpt = userRepository.findByEmail(email);
+            if (userOpt.isEmpty()) {
+                log.warn("User not found for email: {}", email);
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            authenticateUser(userOpt.get(), accessToken);
+
+            log.info("User authenticated successfully: {}", email);
+        } catch (Exception e) {
+            log.error("Error during authentication process", e);
         }
+
         filterChain.doFilter(request, response);
     }
 
+    // 사용자 인증 로직 분리
+    private void authenticateUser(User user, String accessToken) {
+        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
     /**
-     * [인증 허가 메소드]
+     * [인증 허가 메서드]
      * 파라미터의 유저 : 우리가 만든 회원 객체 / 빌더의 유저 : UserDetails의 User 객체
      *
      * new UsernamePasswordAuthenticationToken()로 인증 객체인 Authentication 객체 생성

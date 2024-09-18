@@ -1,10 +1,13 @@
 package com.assgn.yourssu.filter;
 
+import com.assgn.yourssu.domain.common.ErrorStatus;
+import com.assgn.yourssu.exception.UserException;
+import com.assgn.yourssu.exception.handler.CustomAuthenticationSuccessHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,8 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
@@ -36,15 +37,10 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         this.objectMapper = objectMapper;
     }
 
-    protected CustomAuthenticationFilter(String defaultFilterProcessesUrl, ObjectMapper objectMapper) {
-        super(defaultFilterProcessesUrl);
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
-
+        System.out.println("Attempting Authentication at: " + request.getRequestURI()); // 로그 추가
         if(request.getContentType() == null || !request.getContentType().equals(CONTENT_TYPE)){
             throw new AuthenticationServiceException("Authentication Content-Type 이 제공되지 않습니다: "+ request.getContentType());
         }

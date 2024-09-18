@@ -1,10 +1,9 @@
 package com.assgn.yourssu.exception.handler;
 
-import com.assgn.yourssu.domain.User;
 import com.assgn.yourssu.domain.common.ErrorStatus;
 import com.assgn.yourssu.exception.UserException;
 import com.assgn.yourssu.repository.UserRepository;
-import com.assgn.yourssu.security.JwtTokenProvider;
+import com.assgn.yourssu.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,7 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler { // 로그에 찍힘
+public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository; ;
@@ -35,7 +34,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         log.info("로그인 성공. 이메일 : {}", email);
         log.info("로그인 성공. AccessToken: {}", accessToken);
 
-        // 헤더에 토큰 포함
+        // 응답헤더에 토큰 포함
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.addHeader("Refresh-Token", refreshToken);
 

@@ -1,7 +1,9 @@
-package com.assgn.yourssu.security;
+package com.assgn.yourssu.jwt;
 
 import com.assgn.yourssu.dto.TokenDTO;
 import com.assgn.yourssu.repository.UserRepository;
+import com.assgn.yourssu.security.CustomUserDetails;
+import com.assgn.yourssu.security.CustomUserDetailsService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    private final UserRepository userRepository;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Value("${jwt.secretKey}")
@@ -63,7 +64,7 @@ public class JwtTokenProvider {
                 .withSubject(ACCESS_TOKEN_SUBJECT)      // jwt의 이름
                 .withExpiresAt(new Date(now.getTime() + accessTokenExpirationPeriod))   // jwt 만료시간
                 .withClaim(EMAIL_CLAIM, email)      // 토큰의 payload, 키-값 형태
-                .sign(Algorithm.HMAC512(secretKey));    // 사용 해싱 알고리, 시크릿키
+                .sign(Algorithm.HMAC512(secretKey));    // 사용 해싱 알고리즘, 시크릿키
     }
 
     public String createRefreshToken() {
@@ -71,7 +72,7 @@ public class JwtTokenProvider {
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)      // jwt의 이름
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))   // jwt 만료시간
-                .sign(Algorithm.HMAC512(secretKey));    // 사용 해싱 알고리, 시크릿키
+                .sign(Algorithm.HMAC512(secretKey));    // 사용 해싱 알고리즘, 시크릿키
     }
 
     public Optional<String> extractRefreshToken(HttpServletRequest request) {

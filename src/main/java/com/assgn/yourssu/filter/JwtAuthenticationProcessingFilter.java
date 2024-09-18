@@ -2,7 +2,7 @@ package com.assgn.yourssu.filter;
 
 import com.assgn.yourssu.domain.User;
 import com.assgn.yourssu.repository.UserRepository;
-import com.assgn.yourssu.security.JwtTokenProvider;
+import com.assgn.yourssu.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

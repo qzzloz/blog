@@ -34,10 +34,10 @@ public class UserController {
         return ApiResponse.onSuccess(null);
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<TokenDTO> signIn(@RequestBody @Valid UserRequestDTO.SigninDTO request){
-        TokenDTO token = userService.signIn(request);
-        return ResponseEntity.ok(token);
-
-    }
+//    @PostMapping("/signin")
+//    public ResponseEntity<TokenDTO> signIn(@RequestBody @Valid UserRequestDTO.SigninDTO request){
+//        TokenDTO token = userService.signIn(request);
+//        return ResponseEntity.ok(token);
+//
+//    }
 }

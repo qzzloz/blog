@@ -6,7 +6,7 @@ import com.assgn.yourssu.filter.CustomAuthenticationFilter;
 import com.assgn.yourssu.filter.JwtAuthenticationProcessingFilter;
 import com.assgn.yourssu.repository.UserRepository;
 import com.assgn.yourssu.security.CustomUserDetailsService;
-import com.assgn.yourssu.security.JwtTokenProvider;
+import com.assgn.yourssu.jwt.JwtTokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
         ;
 
+
         http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomAuthenticationFilter.class);
 
@@ -83,6 +84,7 @@ public class SecurityConfig {
         CustomAuthenticationFilter customJsonUsernamePasswordLoginFilter
                 = new CustomAuthenticationFilter(objectMapper);
         customJsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
+        System.out.println("1");
         customJsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
         customJsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return customJsonUsernamePasswordLoginFilter;

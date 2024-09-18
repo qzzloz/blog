@@ -10,8 +10,10 @@ import com.assgn.yourssu.exception.ArticleException;
 import com.assgn.yourssu.exception.CommentException;
 import com.assgn.yourssu.repository.ArticleRepository;
 import com.assgn.yourssu.repository.CommentRepository;
+import com.assgn.yourssu.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -22,9 +24,10 @@ public class CommentService {
     private final UserService userService;
     private final CommentRepository commentRepository;
 
-    public CommentResponseDTO createComment(Long articleId, CommentRequestDTO.CreateCommentDTO request) {
+    @Transactional
+    public CommentResponseDTO createComment(Long articleId, CommentRequestDTO.CreateCommentDTO request, CustomUserDetails customUserDetails) {
 
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+        User writer = customUserDetails.getUser();
 
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ArticleException(ErrorStatus.ARTICLE_NOT_EXITS));
@@ -44,6 +47,7 @@ public class CommentService {
                 .build();
     }
 
+    @Transactional
     public CommentResponseDTO getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorStatus.COMMENT_NOT_EXIST));
 
@@ -54,9 +58,10 @@ public class CommentService {
                 .build();
     }
 
-    public CommentResponseDTO updateComment(Long commentId, CommentRequestDTO.UpdateCommentDTO request) {
+    @Transactional
+    public CommentResponseDTO updateComment(Long commentId, CommentRequestDTO.UpdateCommentDTO request, CustomUserDetails customUserDetails) {
 
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+        User writer = customUserDetails.getUser();
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorStatus.COMMENT_NOT_EXIST));
 
@@ -73,8 +78,9 @@ public class CommentService {
                 .build();
     }
 
-    public void deleteComment(Long commentId, CommentRequestDTO.DeleteCommentDTO request) {
-        User writer = userService.checkEmailPwd(request.getEmail(), request.getPassword());
+    @Transactional
+    public void deleteComment(Long commentId, CustomUserDetails customUserDetails) {
+        User writer = customUserDetails.getUser();
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(ErrorStatus.COMMENT_NOT_EXIST));
 

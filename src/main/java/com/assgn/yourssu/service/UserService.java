@@ -6,9 +6,13 @@ import com.assgn.yourssu.dto.UserResponseDTO;
 import com.assgn.yourssu.domain.User;
 import com.assgn.yourssu.exception.UserException;
 import com.assgn.yourssu.repository.UserRepository;
+import com.assgn.yourssu.jwt.JwtTokenProvider;
+import com.assgn.yourssu.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +20,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    @Transactional
     public UserResponseDTO.JoinResponseDTO join(UserRequestDTO.JoinDTO request){
         // 이미 가입한 회원인지 검사
         userRepository.findByEmail(request.getEmail()).ifPresent(
@@ -40,21 +47,18 @@ public class UserService {
                 .build();
     }
 
-    // TODO: 단순 검사말고 로그인 기능으로 바꾸기
-    public User checkEmailPwd(String email, String password){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_EXIST));
-
-        if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new UserException(ErrorStatus.NOT_VALID_PASSWORD);
-        }
-
-        return user;
-    }
-
-
-    public void deleteUser(UserRequestDTO.withdrawDTO request) {
-        User user = checkEmailPwd(request.getEmail(), request.getPassword());
+    @Transactional
+    public void deleteUser(CustomUserDetails customUserDetails) {
+        User user = customUserDetails.getUser();
         userRepository.delete(user);
     }
+
+//    @Transactional
+//    public TokenDTO signIn(UserRequestDTO.SigninDTO request) {
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+//
+//        return jwtTokenProvider.createToken(authentication);
+//
+//    }
 }

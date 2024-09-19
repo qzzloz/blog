@@ -1,1 +1,1 @@
-# YourssuAssgn
+## [API 명세서](https://minji-qzzloz.notion.site/Backend-fc66baeae1e94a748f4fa2f23d0b0334?pvs=4)

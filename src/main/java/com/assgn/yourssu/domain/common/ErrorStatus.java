@@ -23,6 +23,8 @@ public enum ErrorStatus implements BaseErrorCode{
     // 게시글
     ARTICLE_NOT_EXITS(HttpStatus.BAD_REQUEST, "ARTICLE4001", "존재하지 않는 게시글입니다."),
     NOT_VALID_USER(HttpStatus.BAD_REQUEST, "ARTICLE4001", "자신이 작성한 게시글, 댓글만 수정 및 삭제 할 수 있습니다."),
+    INVALID_TITLE(HttpStatus.BAD_REQUEST, "400", "유효하지 않은 title 형식입니다."),
+    INVALID_CONTENT(HttpStatus.BAD_REQUEST, "400", "유효하지 않은 content 형식입니다."),
 
     // 댓글
     COMMENT_NOT_EXIST(HttpStatus.BAD_REQUEST, "COMMENT4001", "존재하지 않는 댓글입니다."),
